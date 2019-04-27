@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Palette Design</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Palette Design</string>
+    <string name="nav_header_subtitle">Build customized color palettes</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="color">Color</string>
+    <string name="main_color">Main Color</string>
+    <string name="secondary_color">Secondary Color</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="primary_color">Primary Color</string>
+    <string name="sky">SKY</string>
+    <string name="carbon">CARBON</string>
+    <string name="watermelon">WATERMELON</string>
+    <string name="neutral">NEUTRAL</string>
+    <string name="color_name">Color Name</string>
+    <string name="click_to_load_color">Click to load color</string>
+    <string name="name">Name</string>
+    <string name="name_your_color">Name your color</string>
+    <string name="click_to_pick_color">Click to pick color</string>
+    <string name="select_color">Select Color</string>
+    <string name="save">Save</string>
+    <string name="click_to_save_color">Click to save color</string>
+    <string name="choose_color_from_image">Choose color from image</string>
+    <string name="set_color">Set color</string>
+    <string name="about">About</string>
+    <string name="help">Help</string>
+    <string name="build_a_new_palette">Build a New Palette</string>
+    <string name="gallery">Gallery</string>
+    <string name="about_details">Palette Design copyright 2019 ekelseya designs</string>
+    <string name="help_information">To Build a new palette: tap the build icon.
+        Selecting each color block in turn will open the build page. Here you can
+        enter the Red, Green and Blue values or the Hexadecimal representation for
+        your color or you can choose to find a color in an image. Once your color
+        is perfect, name it and tap the set color button. Once you have chosen all
+        four colors, you can name your palette and save it to the palette gallery.
+        To load the palette gallery, chose the gallery option in the menu and swipe
+        through your saved palettes.</string>
+    <string name="hexadecimal">Hexadecimal</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+    <string name="enter_color_values">Enter Color Values</string>
+</resources>
