@@ -39,6 +39,11 @@
                 android:parentActivityName=".BuildSplash">
 
         </activity>
+        <activity
+                android:name=".GetImage"
+                android:parentActivityName=".ColorBuild">
+
+        </activity>
     </application>
 
 </manifest>

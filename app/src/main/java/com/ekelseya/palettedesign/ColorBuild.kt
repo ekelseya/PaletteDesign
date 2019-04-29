@@ -141,7 +141,10 @@ class ColorBuild : AppCompatActivity(){
 
         //TODO: Set intent to open camera/gallery
         btnImage.setOnClickListener {
-            //TODO: New Activity bitmap
+            val intent = Intent(this, GetImage::class.java)
+            intent.putExtra("position", colorPosition)
+            //TODO: set extras handler for GetImage
+            startActivity(intent)
         }
     }
 }
