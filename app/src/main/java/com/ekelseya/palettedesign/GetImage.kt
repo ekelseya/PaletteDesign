@@ -17,6 +17,8 @@ class GetImage: Activity(), View.OnClickListener {
     private var selectedPhotoPath: Uri? = null
     private var pictureTaken: Boolean = false
 
+    //TODO: layout is gross! Change to reflect app theme
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.get_image)
