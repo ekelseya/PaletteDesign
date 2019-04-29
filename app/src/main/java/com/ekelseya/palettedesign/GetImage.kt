@@ -20,6 +20,7 @@ class GetImage: Activity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.get_image)
+        //TODO: Add drawable to pictureImageview
 
         pictureImageview.setOnClickListener(this)
         get_image_button.setOnClickListener(this)

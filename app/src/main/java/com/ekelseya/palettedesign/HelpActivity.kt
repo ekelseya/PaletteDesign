@@ -7,5 +7,6 @@ class HelpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.help_content)
+        //TODO: Adjust padding, add screenshots
     }
 }
