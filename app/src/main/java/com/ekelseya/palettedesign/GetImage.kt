@@ -49,6 +49,11 @@ class GetImage: Activity(), View.OnClickListener {
         }
     }
 
+    private fun okImage(){
+        //TODO: write function to set bitmap as intent extra and start activity
+        //TODO: create activity....
+    }
+
     private fun showPictureDialog(){
         val pictureDialog = AlertDialog.Builder(this)
         pictureDialog.setTitle("Select Action")
@@ -120,13 +125,15 @@ class GetImage: Activity(), View.OnClickListener {
         Log.d("fee",wallpaperDirectory.toString())
         if (!wallpaperDirectory.exists())
         {
-
+            //TODO: add else to delete file and rewrite
             wallpaperDirectory.mkdirs()
         }
 
         try
         {
-            Log.d("heel",wallpaperDirectory.toString())
+            //TODO: rename file directory and vals
+            //TODO: use ray weimeriner's tutorial to save file
+            //TODO: https://www.raywenderlich.com/305-android-intents-tutorial-with-kotlin
             val f = File(wallpaperDirectory, ((Calendar.getInstance()
                 .timeInMillis).toString() + ".jpg"))
             f.createNewFile()
