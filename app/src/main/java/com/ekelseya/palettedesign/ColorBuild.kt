@@ -140,6 +140,7 @@ class ColorBuild : AppCompatActivity(){
         }
 
         //TODO: Set intent to open camera/gallery
+        //TODO: change to for result
         btnImage.setOnClickListener {
             val intent = Intent(this, GetImage::class.java)
             intent.putExtra("position", colorPosition)
