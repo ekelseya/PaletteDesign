@@ -48,6 +48,10 @@
                 android:parentActivityName=".ColorBuild">
 
         </activity>
+        <activity android:name=".PickColorActivity"
+                  android:parentActivityName=".GetImage">
+
+        </activity>
 
         <provider
                 android:name="android.support.v4.content.FileProvider"

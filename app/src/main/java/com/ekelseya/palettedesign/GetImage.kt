@@ -1,54 +1,79 @@
 package com.ekelseya.palettedesign
 
-import android.app.Activity
+import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.content.ClipData
 import android.content.Intent
 import android.graphics.Bitmap
-import android.media.MediaScannerConnection
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.support.annotation.RequiresApi
+import android.support.v4.content.FileProvider.getUriForFile
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.get_image.*
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
-class GetImage: Activity(), View.OnClickListener {
-    private val GALLERY = 1
-    private val CAMERA = 2
+class GetImage: AppCompatActivity(), View.OnClickListener {
 
-    //TODO: Missing toolbar with back button
-
-    //TODO: layout is gross! Change to reflect app theme
+    private var selectedPhotoPath: Uri? = null
+    private var pictureTaken: Boolean = false
+    private var bitmapWidth = 100
+    private var bitmapHeight = 100
+    private var redValue = 0
+    private var blueValue = 0
+    private var greenValue = 0
+    private var selectedImageBitmap: Bitmap? = null
+    private var colorPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.get_image)
 
+        val info = intent.extras
+        if (info != null) {
+            if (info.containsKey("position")) {
+                colorPosition = info.getInt("position")
+            }
+        }
+
         image_button.setOnClickListener(this)
         ok_button.setOnClickListener(this)
+        button_setColor.setOnClickListener(this)
 
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onClick(v: View?) {
         if (v != null) {
             when(v.id) {
-                R.id.image_button -> {showPictureDialog()}
-                //TODO: set ok_button onClick for intent to bitmap activity for color
-                R.id.ok_button -> {}
+                R.id.image_button -> {showPictureDialog() }
+                R.id.ok_button -> {getColor()}
+                R.id.button_setColor -> {returnColor()}
                 else -> println("No case satisfied")
             }
         }
     }
 
+    private fun returnColor(){
+        val intent = Intent(this, ColorBuild::class.java)
+        Log.i("intent", "colorbuild")
+        intent.putExtra("position", colorPosition)
+        intent.putExtra("red", redValue)
+        intent.putExtra("green", greenValue)
+        intent.putExtra("blue", blueValue)
+        startActivity(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     private fun showPictureDialog(){
         val pictureDialog = AlertDialog.Builder(this)
         pictureDialog.setTitle("Select Action")
@@ -56,98 +81,102 @@ class GetImage: Activity(), View.OnClickListener {
         pictureDialog.setItems(pictureDialogItems
         ) { _, which ->
             when (which) {
-                0 -> choosePhotoFromGallary()
+                0 -> choosePhotoFromGallery()
                 1 -> takePhotoFromCamera()
             }
         }
         pictureDialog.show()
     }
 
-    private fun choosePhotoFromGallary() {
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    private fun choosePhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
         startActivityForResult(galleryIntent, GALLERY)
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     private fun takePhotoFromCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, CAMERA)
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val imagePath = File(filesDir, "images")
+        val newFile = File(imagePath, "default_image.jpg")
+        if (newFile.exists()) {
+            newFile.delete()
+        } else {
+            newFile.parentFile.mkdirs()
+        }
+        selectedPhotoPath = getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", newFile)
+
+        cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, selectedPhotoPath)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        } else {
+            val clip = ClipData.newUri(contentResolver, "A photo", selectedPhotoPath)
+            cameraIntent.clipData = clip
+            cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        }
+
+        startActivityForResult(cameraIntent, CAMERA)
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     public override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent?) {
 
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GALLERY)
-        {
-            if (data != null)
-            {
-                val contentURI = data.data
-                try
-                {
-                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
-                    saveImage(bitmap)
-                    Toast.makeText(this@GetImage, "Click OK to choose color!", Toast.LENGTH_LONG).show()
-                    pictureImageview.setImageBitmap(bitmap)
-                    image_button.visibility = View.INVISIBLE
-                    ok_button.visibility = View.VISIBLE
-                }
-                catch (e: IOException) {
-                    e.printStackTrace()
-                    Toast.makeText(this@GetImage, "Failed!", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-
+        if (requestCode == GALLERY) {
+            Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
+            image_button.visibility = View.INVISIBLE
+            ok_button.visibility = View.VISIBLE
+            button_setColor.visibility = View.VISIBLE
+            setImageViewWithImage()
+            //TODO: setImageView isn't working with gallery
         }
         else if (requestCode == CAMERA)
         {
-            val thumbnail = data!!.extras!!.get("data") as Bitmap
-            pictureImageview.setImageBitmap(thumbnail)
-            saveImage(thumbnail)
-            Toast.makeText(this@GetImage, "Click OK to choose color!", Toast.LENGTH_LONG).show()
+            setImageViewWithImage()
+            Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
             image_button.visibility = View.INVISIBLE
             ok_button.visibility = View.VISIBLE
+            button_setColor.visibility = View.VISIBLE
         }
     }
 
-    private fun saveImage(myBitmap: Bitmap):String {
-        val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
-        val wallpaperDirectory = File(
-            (Environment.getExternalStorageDirectory()).toString() + COLOR_IMAGE)
-        // have the object build the directory structure, if needed.
-        Log.d("fee",wallpaperDirectory.toString())
-        if (!wallpaperDirectory.exists())
-        {
-
-            wallpaperDirectory.mkdirs()
+    private fun setImageViewWithImage() {
+        val photoPath: Uri = selectedPhotoPath ?: return
+        pictureImageview.post {
+            val pictureBitmap = BitmapResizer.shrinkBitmap(
+                this@GetImage,
+                photoPath,
+                pictureImageview.width,
+                pictureImageview.height
+            )
+            pictureImageview.setImageBitmap(pictureBitmap)
+            selectedImageBitmap = pictureBitmap
         }
+        pictureTaken = true
+    }
 
-        try
-        {
-            Log.d("heel",wallpaperDirectory.toString())
-            val f = File(wallpaperDirectory, ((Calendar.getInstance()
-                .timeInMillis).toString() + ".jpg"))
-            f.createNewFile()
-            val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
-            MediaScannerConnection.scanFile(this,
-                arrayOf(f.path),
-                arrayOf("image/jpeg"), null)
-            fo.close()
-            Log.d("TAG", "File Saved::--->" + f.absolutePath)
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getColor() {
+        //TODO: now x and y are randomly generated
+        val x = ThreadLocalRandom.current().nextInt(0, bitmapWidth)
+        val y = ThreadLocalRandom.current().nextInt(0, bitmapHeight)
+        val pixel = selectedImageBitmap!!.getPixel(x, y)
+        Log.i("pixel", pixel.toString())
+        redValue = Color.red(pixel)
+        blueValue = Color.blue(pixel)
+        greenValue = Color.green(pixel)
 
-            return f.absolutePath
-        }
-        catch (e1: IOException) {
-            e1.printStackTrace()
-        }
-
-        return ""
+        val previewColor = findViewById<ImageView>(R.id.preview_color)
+        previewColor.setBackgroundColor(pixel)
+        Log.i("getColor", "called")
     }
 
     companion object {
         private const val COLOR_IMAGE = "/image"
+        private const val GALLERY = 1
+        private const val CAMERA = 2
     }
 }
