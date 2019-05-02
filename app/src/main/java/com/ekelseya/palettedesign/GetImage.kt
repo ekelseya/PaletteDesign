@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.get_image.*
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
 
-//TODO: might have to do everything in one activity (pickColor + getImage)
 class GetImage: AppCompatActivity(), View.OnClickListener {
 
     private var selectedPhotoPath: Uri? = null
@@ -32,10 +31,18 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
     private var blueValue = 0
     private var greenValue = 0
     private var selectedImageBitmap: Bitmap? = null
+    private var colorPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.get_image)
+
+        val info = intent.extras
+        if (info != null) {
+            if (info.containsKey("position")) {
+                colorPosition = info.getInt("position")
+            }
+        }
 
         image_button.setOnClickListener(this)
         ok_button.setOnClickListener(this)
@@ -57,11 +64,9 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
     }
 
     private fun returnColor(){
-        //TODO: get color position from previous activities
-        //TODO: goes to get image activity?
         val intent = Intent(this, ColorBuild::class.java)
         Log.i("intent", "colorbuild")
-        //intent.putExtra("position", colorPosition)
+        intent.putExtra("position", colorPosition)
         intent.putExtra("red", redValue)
         intent.putExtra("green", greenValue)
         intent.putExtra("blue", blueValue)
@@ -83,6 +88,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
         pictureDialog.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     private fun choosePhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -120,7 +126,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
 
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY) {
-            Toast.makeText(this@GetImage, "Click OK to choose color!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
             image_button.visibility = View.INVISIBLE
             ok_button.visibility = View.VISIBLE
             button_setColor.visibility = View.VISIBLE
@@ -130,7 +136,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
         else if (requestCode == CAMERA)
         {
             setImageViewWithImage()
-            Toast.makeText(this@GetImage, "Click OK to choose color!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
             image_button.visibility = View.INVISIBLE
             ok_button.visibility = View.VISIBLE
             button_setColor.visibility = View.VISIBLE
@@ -154,7 +160,6 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun getColor() {
-        //TODO: error: java.lang.IllegalArgumentException: x must be < bitmap.width()
         //TODO: now x and y are randomly generated
         val x = ThreadLocalRandom.current().nextInt(0, bitmapWidth)
         val y = ThreadLocalRandom.current().nextInt(0, bitmapHeight)
@@ -164,14 +169,9 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
         blueValue = Color.blue(pixel)
         greenValue = Color.green(pixel)
 
-        //TODO: set intent to return red, green, and blue to build color activity
-
-        //val newColor = Color.rgb(redValue, greenValue, blueValue)
-
         val previewColor = findViewById<ImageView>(R.id.preview_color)
         previewColor.setBackgroundColor(pixel)
         Log.i("getColor", "called")
-
     }
 
     companion object {

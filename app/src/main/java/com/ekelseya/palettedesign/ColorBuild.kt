@@ -34,12 +34,7 @@ class ColorBuild : AppCompatActivity(){
         var colorName = ""
 
         var colorPosition = 0
-        val info = intent.extras
-        if (info != null) {
-            if (info.containsKey("position")) {
-                colorPosition = info.getInt("position")
-            }
-        }
+
         i("ColorBuild", colorPosition.toString())
 
         val colorImage = findViewById<ImageView>(R.id.build_color_block)
@@ -51,11 +46,47 @@ class ColorBuild : AppCompatActivity(){
         val nameText = findViewById<EditText>(R.id.nameText)
         val btnValues = findViewById<Button>(R.id.value_button)
         val btnSetColor = findViewById<Button>(R.id.set_button)
-
         val redLabel = findViewById<TextView>(R.id.textRed)
         val greenLabel = findViewById<TextView>(R.id.textGreen)
         val blueLabel = findViewById<TextView>(R.id.textBlue)
         val hexLabel = findViewById<TextView>(R.id.textHex)
+
+        //TODO: needs to be tailored for when color comes back from image
+        //TODO: set red, green, and blue edit texts to new values
+        //TODO: set hex value
+        //TODO: prompt user for name
+        val info = intent.extras
+        if (info != null) {
+            if (info.containsKey("position")) {
+                colorPosition = info.getInt("position")
+            }
+            if (info.containsKey("red")) {
+                redValue = info.getInt("red")
+                greenValue = info.getInt("green")
+                blueValue = info.getInt("blue")
+                btnImage.visibility = View.INVISIBLE
+
+                redText.visibility = View.VISIBLE
+                greenText.visibility = View.VISIBLE
+                blueText.visibility = View.VISIBLE
+                hexText.visibility = View.VISIBLE
+                redLabel.visibility = View.VISIBLE
+                greenLabel.visibility = View.VISIBLE
+                blueLabel.visibility = View.VISIBLE
+                hexLabel.visibility = View.VISIBLE
+                nameText.visibility = View.VISIBLE
+                btnSetColor.visibility = View.VISIBLE
+
+                colorImage.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue))
+
+                redText.setText(redValue.toString())
+                greenText.setText(greenValue.toString())
+                blueText.setText(blueValue.toString())
+
+                hexValue = String.format("#%02X%02X%02X", redValue, greenValue, blueValue)
+                hexText.setText(hexValue)
+            }
+        }
 
         fun colorSet() {
             redValue = Integer.parseInt(redText.text.toString())
@@ -138,9 +169,6 @@ class ColorBuild : AppCompatActivity(){
             startActivity(intent)
 //            i("Intent", """return to buildsplash${colorBlock.cName}""")
         }
-
-        //TODO: Set intent to open camera/gallery
-        //TODO: change to for result
         btnImage.setOnClickListener {
             val intent = Intent(this, GetImage::class.java)
             intent.putExtra("position", colorPosition)
