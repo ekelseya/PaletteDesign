@@ -10,10 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log.i
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 
 class ColorBuild : AppCompatActivity(){
 
@@ -50,6 +47,7 @@ class ColorBuild : AppCompatActivity(){
         val greenLabel = findViewById<TextView>(R.id.textGreen)
         val blueLabel = findViewById<TextView>(R.id.textBlue)
         val hexLabel = findViewById<TextView>(R.id.textHex)
+        val iconImage = findViewById<ImageView>(R.id.buildIcon)
 
         //TODO: needs to be tailored for when color comes back from image
         //TODO: set red, green, and blue edit texts to new values
@@ -65,7 +63,7 @@ class ColorBuild : AppCompatActivity(){
                 greenValue = info.getInt("green")
                 blueValue = info.getInt("blue")
                 btnImage.visibility = View.INVISIBLE
-
+                iconImage.visibility = View.INVISIBLE
                 redText.visibility = View.VISIBLE
                 greenText.visibility = View.VISIBLE
                 blueText.visibility = View.VISIBLE
@@ -89,11 +87,16 @@ class ColorBuild : AppCompatActivity(){
         }
 
         fun colorSet() {
-            redValue = Integer.parseInt(redText.text.toString())
-            greenValue = Integer.parseInt(greenText.text.toString())
-            blueValue = Integer.parseInt(blueText.text.toString())
+            iconImage.visibility = View.INVISIBLE
 
-            colorImage.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue))
+            if(redValue > 255 || greenValue > 255 || blueValue > 255){
+                Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
+            } else {
+                redValue = Integer.parseInt(redText.text.toString())
+                greenValue = Integer.parseInt(greenText.text.toString())
+                blueValue = Integer.parseInt(blueText.text.toString())
+                colorImage.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue))
+            }
         }
 
         fun hexTextSet() {
@@ -104,6 +107,7 @@ class ColorBuild : AppCompatActivity(){
 
         btnValues.setOnClickListener {
             btnImage.visibility = View.INVISIBLE
+            iconImage.visibility = View.INVISIBLE
 
             redText.visibility = View.VISIBLE
             greenText.visibility = View.VISIBLE

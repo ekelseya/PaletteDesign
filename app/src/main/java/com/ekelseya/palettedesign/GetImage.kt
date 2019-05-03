@@ -1,7 +1,6 @@
 package com.ekelseya.palettedesign
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.Intent
@@ -56,7 +55,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         if (v != null) {
             when(v.id) {
-                R.id.image_button -> {showPictureDialog() }
+                R.id.image_button -> {takePhotoFromCamera() }
                 R.id.ok_button -> {getColor()}
                 R.id.button_setColor -> {returnColor()}
                 else -> println("No case satisfied")
@@ -74,6 +73,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
+    //Gallery isn't working; commented out for now
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     private fun showPictureDialog(){
         val pictureDialog = AlertDialog.Builder(this)
@@ -124,8 +124,8 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
 
     @RequiresApi(Build.VERSION_CODES.N)
     public override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent?) {
-
-        if (requestCode == GALLERY) {
+        //Gallery intent isn't writing to bitmap; commented out for now
+/*        if (requestCode == GALLERY) {
             if (resultCode == Activity.RESULT_OK){
                 if (intent != null){
                     selectedPhotoPath = intent.data
@@ -138,10 +138,11 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
             setImageViewWithImage()
             //TODO: setImageView isn't working with gallery
         }
-        else if (requestCode == CAMERA)
+        else */if (requestCode == CAMERA)
         {
             setImageViewWithImage()
             Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
+            imageCamera.visibility = View.INVISIBLE
             image_button.visibility = View.INVISIBLE
             ok_button.visibility = View.VISIBLE
             button_setColor.visibility = View.VISIBLE
@@ -158,6 +159,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
                 pictureImageview.width,
                 pictureImageview.height
             )
+            pictureImageview.setImageDrawable(null)
             pictureImageview.setImageBitmap(pictureBitmap)
             selectedImageBitmap = pictureBitmap
         }

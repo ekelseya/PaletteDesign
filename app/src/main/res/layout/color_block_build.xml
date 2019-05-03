@@ -12,6 +12,19 @@
             tools:context="com.ekelseya.palettedesign.ColorBuild">
 
         <ImageView
+                android:id="@+id/buildIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/build_color_block"
+                app:layout_constraintStart_toStartOf="@+id/build_color_block"
+                app:layout_constraintBottom_toBottomOf="@+id/build_color_block"
+                app:layout_constraintTop_toTopOf="@+id/build_color_block"
+                android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="Icon" android:background="@drawable/get_color"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp" android:layout_marginTop="8dp"/>
+
+        <ImageView
                 android:id="@+id/build_color_block"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
@@ -59,7 +72,7 @@
                 android:layout_marginStart="24dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="24dp"
                 app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"
-                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button" android:text="0"/>
+                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"/>
         <EditText
                 android:id="@+id/editGreen"
                 android:layout_width="80dp"
@@ -72,7 +85,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="250dp" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button" android:text="0"/>
+                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"/>
 
         <EditText
                 android:id="@+id/editBlue"
@@ -87,7 +100,7 @@
                 android:layout_marginLeft="8dp" app:layout_constraintHorizontal_bias="1.0"
                 android:layout_marginBottom="250dp"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
-                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button" android:text="0"/>
+                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"/>
         <EditText
                 android:id="@+id/editHex"
                 android:layout_width="wrap_content"
@@ -168,10 +181,12 @@
                 android:ems="10"
                 android:id="@+id/nameText" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/textHex" android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp" android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
-                android:inputType="textShortMessage|text" android:hint="@string/color_name"
+                android:inputType="textNoSuggestions" android:hint="@string/color_name"
                 android:visibility="invisible"/>
 
     </android.support.constraint.ConstraintLayout>
