@@ -7,14 +7,15 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 
+private const val PREFS_BLOCKS = "prefs_blocks"
+private const val KEY_BLOCKS_LIST = "color_list"
 
 class BuildSplash : AppCompatActivity() {
-
-    private val PREFS_BLOCKS = "prefs_blocks"
-    private val KEY_BLOCKS_LIST = "color_list"
 
     private var colorPosition: Int = 0
     private var colorCount: Int = 0
@@ -28,6 +29,31 @@ class BuildSplash : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.build_splash)
 
+        //Declare all views
+        val primaryColor = findViewById<ImageView>(R.id.build_color_1)
+        val primarySplashLabel = findViewById<TextView>(R.id.color_label_1)
+        val primaryName = findViewById<TextView>(R.id.color_name_1)
+        val primaryHex = findViewById<TextView>(R.id.text_hex1)
+
+        val secondaryColor = findViewById<ImageView>(R.id.build_color_2)
+        val secondarySplashLabel = findViewById<TextView>(R.id.color_label_2)
+        val secondaryName = findViewById<TextView>(R.id.color_name_2)
+        val secondaryHex = findViewById<TextView>(R.id.text_hex2)
+
+        val tertiaryColor = findViewById<ImageView>(R.id.build_color_3)
+        val tertiarySplashLabel = findViewById<TextView>(R.id.color_label_3)
+        val tertiaryName = findViewById<TextView>(R.id.color_name_3)
+        val tertiaryHex = findViewById<TextView>(R.id.text_hex3)
+
+        val accentColor = findViewById<ImageView>(R.id.build_color_4)
+        val accentSplashLabel = findViewById<TextView>(R.id.color_label_4)
+        val accentName = findViewById<TextView>(R.id.color_name_4)
+        val accentHex = findViewById<TextView>(R.id.text_hex4)
+
+        val paletteNameBox = findViewById<EditText>(R.id.editPaletteName)
+        val paletteSaveButton = findViewById<Button>(R.id.paletteSaveButton)
+
+        //Get previous colors from shared preferences
         val savedList = getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).getString(KEY_BLOCKS_LIST, null)
         if(savedList != null){
             val info = savedList.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -49,6 +75,7 @@ class BuildSplash : AppCompatActivity() {
             }
         }
 
+        //Declare values
         colorPosition = intent.getIntExtra("position", 0)
         val name = intent.getStringExtra("name")
         val hex = intent.getStringExtra("hex")
@@ -66,7 +93,6 @@ class BuildSplash : AppCompatActivity() {
 
         var newColor: Int
 
-        val primaryColor = findViewById<ImageView>(R.id.build_color_1)
         primaryColor.setOnClickListener {
             colorCount = 1
             val intent = Intent(this, ColorBuild::class.java)
@@ -75,15 +101,14 @@ class BuildSplash : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val primarySplashLabel = findViewById<TextView>(R.id.color_label_1)
-        val primaryName = findViewById<TextView>(R.id.color_name_1)
-        val primaryHex = findViewById<TextView>(R.id.text_hex1)
-        val secondarySplashLabel = findViewById<TextView>(R.id.color_label_2)
-
-        if (colorPosition == 1) {
+        fun primaryVisibility(){
             primarySplashLabel.visibility = View.INVISIBLE
+            primaryName.visibility = View.VISIBLE
+            primaryHex.visibility = View.VISIBLE
             secondarySplashLabel.visibility = View.VISIBLE
+        }
 
+        fun primaryColorSet(){
             newColor = Color.rgb(primaryBlock.cRed,
                 primaryBlock.cGreen, primaryBlock.cBlue)
             primaryColor.setBackgroundResource(0)
@@ -92,39 +117,16 @@ class BuildSplash : AppCompatActivity() {
             textBrightness(primaryHex, newColor)
             primaryName.text = primaryBlock.cName
             primaryHex.text = primaryBlock.cHexRep
-            primaryName.visibility = View.VISIBLE
-            primaryHex.visibility = View.VISIBLE
         }
 
-        val secondaryColor = findViewById<ImageView>(R.id.build_color_2)
-        secondaryColor.setOnClickListener {
-            colorCount = 2
-            val intent = Intent(this, ColorBuild::class.java)
-            intent.putExtra("position", colorCount)
-            Log.i("color", "secondary color intent sent")
-            startActivity(intent)
-        }
-
-        val secondaryName = findViewById<TextView>(R.id.color_name_2)
-        val secondaryHex = findViewById<TextView>(R.id.text_hex2)
-        val tertiarySplashLabel = findViewById<TextView>(R.id.color_label_3)
-
-        if (colorPosition == 2){
-            primarySplashLabel.visibility = View.INVISIBLE
+        fun secondaryVisibility(){
             secondarySplashLabel.visibility = View.INVISIBLE
+            secondaryName.visibility = View.VISIBLE
+            secondaryHex.visibility = View.VISIBLE
             tertiarySplashLabel.visibility = View.VISIBLE
+        }
 
-            newColor = Color.rgb(primaryBlock.cRed,
-                primaryBlock.cGreen, primaryBlock.cBlue)
-            primaryColor.setBackgroundResource(0)
-            primaryColor.setBackgroundColor(newColor)
-            textBrightness(primaryName, newColor)
-            textBrightness(primaryHex, newColor)
-            primaryName.text = primaryBlock.cName
-            primaryHex.text = primaryBlock.cHexRep
-            primaryName.visibility = View.VISIBLE
-            primaryHex.visibility = View.VISIBLE
-
+        fun secondaryColorSet(){
             newColor = Color.rgb(secondaryBlock.cRed,
                 secondaryBlock.cGreen, secondaryBlock.cBlue)
             secondaryColor.setBackgroundResource(0)
@@ -133,114 +135,35 @@ class BuildSplash : AppCompatActivity() {
             textBrightness(secondaryHex, newColor)
             secondaryName.text = secondaryBlock.cName
             secondaryHex.text = secondaryBlock.cHexRep
-            secondaryName.visibility = View.VISIBLE
-            secondaryHex.visibility = View.VISIBLE
         }
 
-        val tertiaryColor = findViewById<ImageView>(R.id.build_color_3)
-        tertiaryColor.setOnClickListener {
-            colorCount = 3
-            val intent = Intent(this, ColorBuild::class.java)
-            intent.putExtra("position", colorCount)
-            Log.i("color", "tertiary color intent sent")
-            startActivity(intent)
-        }
-
-        val tertiaryName = findViewById<TextView>(R.id.color_name_3)
-        val tertiaryHex = findViewById<TextView>(R.id.text_hex3)
-        val accentSplashLabel = findViewById<TextView>(R.id.color_label_4)
-
-        if (colorPosition == 3){
-            primarySplashLabel.visibility = View.INVISIBLE
-            secondarySplashLabel.visibility = View.INVISIBLE
+        fun tertiaryVisibility(){
             tertiarySplashLabel.visibility = View.INVISIBLE
+            tertiaryName.visibility = View.VISIBLE
+            tertiaryHex.visibility = View.VISIBLE
             accentSplashLabel.visibility = View.VISIBLE
+        }
 
-            newColor = Color.rgb(primaryBlock.cRed,
-                primaryBlock.cGreen, primaryBlock.cBlue)
-            primaryColor.setBackgroundResource(0)
-            primaryColor.setBackgroundColor(newColor)
-            textBrightness(primaryName, newColor)
-            textBrightness(primaryHex, newColor)
-            primaryName.text = primaryBlock.cName
-            primaryHex.text = primaryBlock.cHexRep
-            primaryName.visibility = View.VISIBLE
-            primaryHex.visibility = View.VISIBLE
-
-            newColor = Color.rgb(secondaryBlock.cRed,
-                secondaryBlock.cGreen, secondaryBlock.cBlue)
-            secondaryColor.setBackgroundResource(0)
-            secondaryColor.setBackgroundColor(newColor)
-            textBrightness(secondaryName, newColor)
-            textBrightness(secondaryHex, newColor)
-            secondaryName.text = secondaryBlock.cName
-            secondaryHex.text = secondaryBlock.cHexRep
-            secondaryName.visibility = View.VISIBLE
-            secondaryHex.visibility = View.VISIBLE
-
+        fun tertiaryColorSet(){
             newColor = Color.rgb(tertiaryBlock.cRed,
-                tertiaryBlock.cGreen, tertiaryBlock.cBlue)
+            tertiaryBlock.cGreen, tertiaryBlock.cBlue)
             tertiaryColor.setBackgroundResource(0)
             tertiaryColor.setBackgroundColor(newColor)
             textBrightness(tertiaryName, newColor)
             textBrightness(tertiaryHex, newColor)
             tertiaryName.text = tertiaryBlock.cName
             tertiaryHex.text = tertiaryBlock.cHexRep
-            tertiaryName.visibility = View.VISIBLE
-            tertiaryHex.visibility = View.VISIBLE
         }
 
-        val accentColor = findViewById<ImageView>(R.id.build_color_4)
-        accentColor.setOnClickListener {
-            colorCount = 4
-            val intent = Intent(this, ColorBuild::class.java)
-            intent.putExtra("position", colorCount)
-            Log.i("color", "accent color intent sent")
-            startActivity(intent)
-        }
-
-        val accentName = findViewById<TextView>(R.id.color_name_4)
-        val accentHex = findViewById<TextView>(R.id.text_hex4)
-
-        if (colorPosition == 4){
-            primarySplashLabel.visibility = View.INVISIBLE
-            secondarySplashLabel.visibility = View.INVISIBLE
-            tertiarySplashLabel.visibility = View.INVISIBLE
+        fun accentVisibility(){
             accentSplashLabel.visibility = View.INVISIBLE
+            accentName.visibility = View.VISIBLE
+            accentHex.visibility = View.VISIBLE
+            paletteNameBox.visibility = View.VISIBLE
+            paletteSaveButton.visibility = View.VISIBLE
+        }
 
-            newColor = Color.rgb(primaryBlock.cRed,
-                primaryBlock.cGreen, primaryBlock.cBlue)
-            primaryColor.setBackgroundResource(0)
-            primaryColor.setBackgroundColor(newColor)
-            textBrightness(primaryName, newColor)
-            textBrightness(primaryHex, newColor)
-            primaryName.text = primaryBlock.cName
-            primaryHex.text = primaryBlock.cHexRep
-            primaryName.visibility = View.VISIBLE
-            primaryHex.visibility = View.VISIBLE
-
-            newColor = Color.rgb(secondaryBlock.cRed,
-                secondaryBlock.cGreen, secondaryBlock.cBlue)
-            secondaryColor.setBackgroundResource(0)
-            secondaryColor.setBackgroundColor(newColor)
-            textBrightness(secondaryName, newColor)
-            textBrightness(secondaryHex, newColor)
-            secondaryName.text = secondaryBlock.cName
-            secondaryHex.text = secondaryBlock.cHexRep
-            secondaryName.visibility = View.VISIBLE
-            secondaryHex.visibility = View.VISIBLE
-
-            newColor = Color.rgb(tertiaryBlock.cRed,
-                tertiaryBlock.cGreen, tertiaryBlock.cBlue)
-            tertiaryColor.setBackgroundResource(0)
-            tertiaryColor.setBackgroundColor(newColor)
-            textBrightness(tertiaryName, newColor)
-            textBrightness(tertiaryHex, newColor)
-            tertiaryName.text = tertiaryBlock.cName
-            tertiaryHex.text = tertiaryBlock.cHexRep
-            tertiaryName.visibility = View.VISIBLE
-            tertiaryHex.visibility = View.VISIBLE
-
+        fun accentColorSet(){
             newColor = Color.rgb(accentBlock.cRed,
                 accentBlock.cGreen, accentBlock.cBlue)
             accentColor.setBackgroundResource(0)
@@ -249,12 +172,64 @@ class BuildSplash : AppCompatActivity() {
             textBrightness(accentHex, newColor)
             accentName.text = accentBlock.cName
             accentHex.text = accentBlock.cHexRep
-            accentName.visibility = View.VISIBLE
-            accentHex.visibility = View.VISIBLE
         }
 
-        //TODO: Add Palette Name prompt: should become visible when all blocks are initialized
-        //TODO: Add save button: should become visible when all blocks are initialized.
+        if (colorPosition == 1) {
+            primaryVisibility()
+            primaryColorSet()
+        }
+
+        secondaryColor.setOnClickListener {
+            colorCount = 2
+            val intent = Intent(this, ColorBuild::class.java)
+            intent.putExtra("position", colorCount)
+            Log.i("color", "secondary color intent sent")
+            startActivity(intent)
+        }
+
+        if (colorPosition == 2){
+            primaryVisibility()
+            primaryColorSet()
+            secondaryVisibility()
+            secondaryColorSet()
+        }
+
+        tertiaryColor.setOnClickListener {
+            colorCount = 3
+            val intent = Intent(this, ColorBuild::class.java)
+            intent.putExtra("position", colorCount)
+            Log.i("color", "tertiary color intent sent")
+            startActivity(intent)
+        }
+
+        if (colorPosition == 3){
+            primaryVisibility()
+            secondaryVisibility()
+            primaryColorSet()
+            secondaryColorSet()
+            tertiaryVisibility()
+            tertiaryColorSet()
+        }
+
+        accentColor.setOnClickListener {
+            colorCount = 4
+            val intent = Intent(this, ColorBuild::class.java)
+            intent.putExtra("position", colorCount)
+            Log.i("color", "accent color intent sent")
+            startActivity(intent)
+        }
+
+        if (colorPosition == 4){
+            primaryVisibility()
+            primaryColorSet()
+            secondaryVisibility()
+            secondaryColorSet()
+            tertiaryVisibility()
+            tertiaryColorSet()
+            accentVisibility()
+            accentColorSet()
+        }
+
         //TODO: Save as map of ColorBlocks: Palette name as key?
         //TODO: or create Palette class with name and notes, save as map with date/time as key
     }
@@ -268,65 +243,45 @@ class BuildSplash : AppCompatActivity() {
         if (isColorDark(color)) textView.setTextColor(Color.WHITE)
     }
 
+    private fun preferenceStringBuilder(colorBlocks: ColorBlocks): String{
+        val savedString = java.lang.StringBuilder()
+        savedString.append(colorBlocks.cName)
+        savedString.append(",")
+        savedString.append(colorBlocks.cHexRep)
+        savedString.append(",")
+        savedString.append(colorBlocks.cRed.toString())
+        savedString.append(",")
+        savedString.append(colorBlocks.cGreen.toString())
+        savedString.append(",")
+        savedString.append(colorBlocks.cBlue.toString())
+        savedString.append(",")
+        savedString.append(colorBlocks.cPos.toString())
+        savedString.append(",")
+
+        return savedString.toString()
+    }
+
     override fun onStop() {
         super.onStop()
-        val savedList = StringBuilder()
+        var savedList = ""
         if (::primaryBlock.isInitialized) {
-            savedList.append(primaryBlock.cName)
-            savedList.append(",")
-            savedList.append(primaryBlock.cHexRep)
-            savedList.append(",")
-            savedList.append(primaryBlock.cRed.toString())
-            savedList.append(",")
-            savedList.append(primaryBlock.cGreen.toString())
-            savedList.append(",")
-            savedList.append(primaryBlock.cBlue.toString())
-            savedList.append(",")
-            savedList.append(primaryBlock.cPos.toString())
-            savedList.append(",")
+            savedList = preferenceStringBuilder(primaryBlock)
         }
         if (::secondaryBlock.isInitialized) {
-            savedList.append(secondaryBlock.cName)
-            savedList.append(",")
-            savedList.append(secondaryBlock.cHexRep)
-            savedList.append(",")
-            savedList.append(secondaryBlock.cRed.toString())
-            savedList.append(",")
-            savedList.append(secondaryBlock.cGreen.toString())
-            savedList.append(",")
-            savedList.append(secondaryBlock.cBlue.toString())
-            savedList.append(",")
-            savedList.append(secondaryBlock.cPos.toString())
-            savedList.append(",")
+            savedList = preferenceStringBuilder(primaryBlock)+
+                    preferenceStringBuilder(secondaryBlock)
         }
         if (::tertiaryBlock.isInitialized) {
-            savedList.append(tertiaryBlock.cName)
-            savedList.append(",")
-            savedList.append(tertiaryBlock.cHexRep)
-            savedList.append(",")
-            savedList.append(tertiaryBlock.cRed.toString())
-            savedList.append(",")
-            savedList.append(tertiaryBlock.cGreen.toString())
-            savedList.append(",")
-            savedList.append(tertiaryBlock.cBlue.toString())
-            savedList.append(",")
-            savedList.append(tertiaryBlock.cPos.toString())
-            savedList.append(",")
+            savedList = preferenceStringBuilder(primaryBlock) +
+                    preferenceStringBuilder(secondaryBlock) +
+                    preferenceStringBuilder(tertiaryBlock)
         }
         if (::accentBlock.isInitialized) {
-            savedList.append(accentBlock.cName)
-            savedList.append(",")
-            savedList.append(accentBlock.cHexRep)
-            savedList.append(",")
-            savedList.append(accentBlock.cRed.toString())
-            savedList.append(",")
-            savedList.append(accentBlock.cGreen.toString())
-            savedList.append(",")
-            savedList.append(accentBlock.cBlue.toString())
-            savedList.append(",")
-            savedList.append(accentBlock.cPos.toString())
-            savedList.append(",")
+            savedList = preferenceStringBuilder(primaryBlock) +
+                    preferenceStringBuilder(secondaryBlock) +
+                    preferenceStringBuilder(tertiaryBlock) +
+                    preferenceStringBuilder(accentBlock)
         }
-        getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).edit().putString(KEY_BLOCKS_LIST, savedList.toString()).apply()
+        getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).edit().putString(KEY_BLOCKS_LIST, savedList).apply()
     }
 }
