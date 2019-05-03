@@ -14,6 +14,11 @@ import android.widget.*
 
 class ColorBuild : AppCompatActivity(){
 
+    //TODO: Check for null values rgb
+    //TODO: Check for out of bounds values for rgb
+    //TODO: Fix focus on red values
+    //TODO: Fix focus on return from image: Focus should go to Color Name (not red value)
+
     @RequiresApi(Build.VERSION_CODES.CUPCAKE)
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -49,9 +54,6 @@ class ColorBuild : AppCompatActivity(){
         val hexLabel = findViewById<TextView>(R.id.textHex)
         val iconImage = findViewById<ImageView>(R.id.buildIcon)
 
-        //TODO: set red, green, and blue edit texts to new values
-        //TODO: set hex value
-        //TODO: prompt user for name
         val info = intent.extras
         if (info != null) {
             if (info.containsKey("position")) {
@@ -184,7 +186,6 @@ class ColorBuild : AppCompatActivity(){
         btnImage.setOnClickListener {
             val intent = Intent(this, GetImage::class.java)
             intent.putExtra("position", colorPosition)
-            //TODO: set extras handler for GetImage
             startActivity(intent)
         }
     }
