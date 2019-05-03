@@ -72,7 +72,8 @@
                 android:layout_marginStart="24dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="24dp"
                 app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"
-                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"/>
+                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"
+                android:text="0"/>
         <EditText
                 android:id="@+id/editGreen"
                 android:layout_width="80dp"
@@ -85,7 +86,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="250dp" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"/>
+                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"
+                android:text="0"/>
 
         <EditText
                 android:id="@+id/editBlue"
@@ -100,7 +102,8 @@
                 android:layout_marginLeft="8dp" app:layout_constraintHorizontal_bias="1.0"
                 android:layout_marginBottom="250dp"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
-                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"/>
+                android:visibility="invisible" app:layout_constraintTop_toBottomOf="@+id/value_button"
+                android:text="0"/>
         <EditText
                 android:id="@+id/editHex"
                 android:layout_width="wrap_content"

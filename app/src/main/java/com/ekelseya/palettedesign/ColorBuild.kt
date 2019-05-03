@@ -49,7 +49,6 @@ class ColorBuild : AppCompatActivity(){
         val hexLabel = findViewById<TextView>(R.id.textHex)
         val iconImage = findViewById<ImageView>(R.id.buildIcon)
 
-        //TODO: needs to be tailored for when color comes back from image
         //TODO: set red, green, and blue edit texts to new values
         //TODO: set hex value
         //TODO: prompt user for name
@@ -86,17 +85,26 @@ class ColorBuild : AppCompatActivity(){
             }
         }
 
+        fun testAllValues(): Boolean{
+            return if(redValue > 255 || greenValue > 255 || blueValue > 255){
+                Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
+                false
+            } else if(redValue < 0 || greenValue < 0 || blueValue < 0) {
+                    Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
+                    false
+                } else true
+        }
+
+        fun testNullValue(value: Int): Boolean{
+            return value != null
+        }
+
         fun colorSet() {
             iconImage.visibility = View.INVISIBLE
-
-            if(redValue > 255 || greenValue > 255 || blueValue > 255){
-                Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
-            } else {
-                redValue = Integer.parseInt(redText.text.toString())
-                greenValue = Integer.parseInt(greenText.text.toString())
-                blueValue = Integer.parseInt(blueText.text.toString())
-                colorImage.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue))
-            }
+            redValue = Integer.parseInt(redText.text.toString())
+            greenValue = Integer.parseInt(greenText.text.toString())
+            blueValue = Integer.parseInt(blueText.text.toString())
+            colorImage.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue))
         }
 
         fun hexTextSet() {
