@@ -1,6 +1,7 @@
 package com.ekelseya.palettedesign
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.Intent
@@ -124,8 +125,12 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
     @RequiresApi(Build.VERSION_CODES.N)
     public override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent?) {
 
-        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY) {
+            if (resultCode == Activity.RESULT_OK){
+                if (intent != null){
+                    selectedPhotoPath = intent.data
+                }
+            }
             Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
             image_button.visibility = View.INVISIBLE
             ok_button.visibility = View.VISIBLE
@@ -141,6 +146,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
             ok_button.visibility = View.VISIBLE
             button_setColor.visibility = View.VISIBLE
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun setImageViewWithImage() {

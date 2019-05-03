@@ -7,14 +7,16 @@
 
     <ImageView
             android:id="@+id/pictureImageview"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="376dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            android:contentDescription="Image from camera or gallery"/>
+            android:contentDescription="Image from camera or gallery" android:background="@drawable/add_photo"
+            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp"/>
 
     <Button
             android:id="@+id/image_button"
@@ -39,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="New Color" android:background="@color/colorPrimary"
+            android:text="Find New Color in Image" android:background="@color/colorPrimary"
             android:layout_below="@+id/pictureImageview"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/image_button" app:layout_constraintStart_toStartOf="parent"
