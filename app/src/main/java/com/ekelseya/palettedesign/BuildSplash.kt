@@ -8,16 +8,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.*
-import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
+import java.io.*
 
 private const val PREFS_BLOCKS = "prefs_blocks"
 private const val KEY_BLOCKS_LIST = "color_list"
-private var paletteArray: ArrayList<Palette>? = null
-
 
 class BuildSplash : AppCompatActivity() {
+    private var paletteArray: MutableList<Palette>? = null
 
     private var colorPosition: Int = 0
     private var colorCount: Int = 0
@@ -230,9 +227,19 @@ class BuildSplash : AppCompatActivity() {
             tertiaryColorSet()
             accentVisibility()
             accentColorSet()
+            paletteSaveButton.visibility = View.VISIBLE
+            paletteNameBox.visibility = View.VISIBLE
         }
 
-        //TODO: Save as map of ColorBlocks: Palette name as key?
+        val paletteName = paletteNameBox.text.toString()
+        val palette = Palette(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock, paletteName)
+        onLoad()
+        paletteArray!!.add(palette)
+
+        paletteSaveButton.setOnClickListener(){
+            onSave()
+        }
+
         //TODO: or create Palette class with name and notes, save as map with date/time as key
     }
 
@@ -291,5 +298,18 @@ class BuildSplash : AppCompatActivity() {
         ObjectOutputStream(FileOutputStream(favFile)).use { it -> it.writeObject(paletteArray) }
 
         Toast.makeText(this, "New Palette Saved!", Toast.LENGTH_SHORT).show()
+    }
+    fun onLoad() {
+        val favFile = File(filesDir, "favorites")
+        if (favFile.exists()) {
+            ObjectInputStream(FileInputStream(favFile)).use { it ->
+                val loadedPalettes = it.readObject()
+                when (loadedPalettes) {
+                    is MutableList<*> -> Log.i("Load", "Deserialized")
+                    else -> Log.i("Load", "Failed")
+                }
+                paletteArray = loadedPalettes as MutableList<Palette>
+            }
+        }
     }
 }
