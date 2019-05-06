@@ -1,13 +1,12 @@
 package com.ekelseya.palettedesign
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
+import kotlinx.android.synthetic.main.activity_gallery.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.ObjectInputStream
@@ -46,7 +45,20 @@ class GalleryActivity: AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
+                val tempPalette = paletteArray[position]
+                loadColor(primary_image, tempPalette.primaryBlock)
+                loadColor(secondary_image, tempPalette.secondaryBlock)
+                loadColor(tertiary_image, tempPalette.tertiaryBlock)
+                loadColor(accent_image, tempPalette.accentBlock)
+                loadNames(primary_name, tempPalette.primaryBlock)
+                loadHex(primary_hex, tempPalette.primaryBlock)
+                loadNames(secondary_name, tempPalette.secondaryBlock)
+                loadHex(secondary_hex, tempPalette.secondaryBlock)
+                loadNames(tertiary_name, tempPalette.tertiaryBlock)
+                loadHex(tertiary_name, tempPalette.tertiaryBlock)
+                loadNames(accent_name, tempPalette.accentBlock)
+                loadHex(accent_name, tempPalette.accentBlock)
+                textPaletteName.text = tempPalette.pName
             }
         }
     }
@@ -63,5 +75,16 @@ class GalleryActivity: AppCompatActivity() {
                 paletteArray = loadedPalettes as ArrayList<Palette>
             }
         }
+    }
+
+    private fun loadColor(imageView: ImageView, colorBlocks: ColorBlocks){
+        val backgroundColor = Color.rgb(colorBlocks.cRed, colorBlocks.cGreen, colorBlocks.cBlue)
+        imageView.setBackgroundColor(backgroundColor)
+    }
+    private fun loadNames(textView: TextView, colorBlocks: ColorBlocks){
+        textView.text = colorBlocks.cName
+    }
+    private fun loadHex(textView: TextView, colorBlocks: ColorBlocks){
+        textView.text = colorBlocks.cHexRep
     }
 }
