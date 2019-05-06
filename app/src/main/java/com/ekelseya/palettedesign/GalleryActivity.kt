@@ -55,9 +55,9 @@ class GalleryActivity: AppCompatActivity() {
                 loadNames(secondary_name, tempPalette.secondaryBlock)
                 loadHex(secondary_hex, tempPalette.secondaryBlock)
                 loadNames(tertiary_name, tempPalette.tertiaryBlock)
-                loadHex(tertiary_name, tempPalette.tertiaryBlock)
+                loadHex(tertiary_hex, tempPalette.tertiaryBlock)
                 loadNames(accent_name, tempPalette.accentBlock)
-                loadHex(accent_name, tempPalette.accentBlock)
+                loadHex(accent_hex, tempPalette.accentBlock)
                 textPaletteName.text = tempPalette.pName
             }
         }
