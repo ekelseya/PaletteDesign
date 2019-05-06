@@ -7,13 +7,15 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.ObjectOutputStream
 
 private const val PREFS_BLOCKS = "prefs_blocks"
 private const val KEY_BLOCKS_LIST = "color_list"
+private var paletteArray: ArrayList<Palette>? = null
+
 
 class BuildSplash : AppCompatActivity() {
 
@@ -283,5 +285,11 @@ class BuildSplash : AppCompatActivity() {
                     preferenceStringBuilder(accentBlock)
         }
         getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).edit().putString(KEY_BLOCKS_LIST, savedList).apply()
+    }
+    fun onSave() {
+        val favFile = File(filesDir, "favorites")
+        ObjectOutputStream(FileOutputStream(favFile)).use { it -> it.writeObject(paletteArray) }
+
+        Toast.makeText(this, "New Palette Saved!", Toast.LENGTH_SHORT).show()
     }
 }

@@ -87,14 +87,18 @@ class ColorBuild : AppCompatActivity(){
             }
         }
 
-        fun testAllValues(): Boolean{
-            return if(redValue > 255 || greenValue > 255 || blueValue > 255){
-                Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
-                false
-            } else if(redValue < 0 || greenValue < 0 || blueValue < 0) {
+        fun testAllValues(int: Int): Boolean{
+            return when {
+                int > 255 -> {
                     Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
                     false
-                } else true
+                }
+                int < 0 -> {
+                    Toast.makeText(this@ColorBuild, "Error! Values must be less than 255", Toast.LENGTH_LONG).show()
+                    false
+                }
+                else -> true
+            }
         }
 
         fun testNullValue(value: Int): Boolean{

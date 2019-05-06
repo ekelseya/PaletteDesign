@@ -24,6 +24,10 @@
             </intent-filter>
         </activity>
         <activity
+                android:name=".GalleryActivity"
+                android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
             android:name=".HelpActivity"
             android:parentActivityName=".MainActivity">
 
@@ -48,11 +52,6 @@
                 android:parentActivityName=".ColorBuild">
 
         </activity>
-        <activity android:name=".PickColorActivity"
-                  android:parentActivityName=".GetImage">
-
-        </activity>
-
         <provider
                 android:name="android.support.v4.content.FileProvider"
                 android:authorities="${applicationId}.fileprovider"
