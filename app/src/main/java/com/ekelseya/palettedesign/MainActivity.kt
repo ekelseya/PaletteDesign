@@ -80,8 +80,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.nav_gallery -> {
-                //TODO: Open Gallery activity
-                //TODO: Build gallery activity
+                val intent = Intent(this, GalleryActivity::class.java)
+                intent.putExtra("nav", "gallery")
+                Log.i("nav", "build intent sent")
+                startActivity(intent)
             }
             R.id.nav_share -> {
                 //TODO: ??

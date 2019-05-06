@@ -27,11 +27,11 @@ class GalleryActivity: AppCompatActivity() {
         onLoad()
 
         val gallerySpinner = findViewById<Spinner>(R.id.spinner)
-        val paletteNames: MutableList<String>? = null
+        val paletteNames = mutableListOf<String>(samplePalette.pName)
 
-        var i = 0
+        var i = 1
         while (i < paletteArray.size) {
-            paletteNames?.add(paletteArray[i].pName)
+            paletteNames.add(paletteArray[i].pName)
             i += 1
         }
 
@@ -51,7 +51,7 @@ class GalleryActivity: AppCompatActivity() {
         }
     }
 
-    fun onLoad() {
+    private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
             ObjectInputStream(FileInputStream(favFile)).use { it ->
