@@ -30,25 +30,25 @@ class BuildSplash : AppCompatActivity() {
         setContentView(R.layout.build_splash)
 
         //Declare all views
-        val primaryColor = findViewById<ImageView>(R.id.build_color_1)
+        val primaryColor = findViewById<ImageView>(R.id.primary_image)
         val primarySplashLabel = findViewById<TextView>(R.id.color_label_1)
-        val primaryName = findViewById<TextView>(R.id.color_name_1)
-        val primaryHex = findViewById<TextView>(R.id.text_hex1)
+        val primaryName = findViewById<TextView>(R.id.primary_name)
+        val primaryHex = findViewById<TextView>(R.id.primary_hex)
 
-        val secondaryColor = findViewById<ImageView>(R.id.build_color_2)
+        val secondaryColor = findViewById<ImageView>(R.id.secondary_image)
         val secondarySplashLabel = findViewById<TextView>(R.id.color_label_2)
-        val secondaryName = findViewById<TextView>(R.id.color_name_2)
-        val secondaryHex = findViewById<TextView>(R.id.text_hex2)
+        val secondaryName = findViewById<TextView>(R.id.secondary_name)
+        val secondaryHex = findViewById<TextView>(R.id.secondary_hex)
 
-        val tertiaryColor = findViewById<ImageView>(R.id.build_color_3)
+        val tertiaryColor = findViewById<ImageView>(R.id.tertiary_image)
         val tertiarySplashLabel = findViewById<TextView>(R.id.color_label_3)
-        val tertiaryName = findViewById<TextView>(R.id.color_name_3)
-        val tertiaryHex = findViewById<TextView>(R.id.text_hex3)
+        val tertiaryName = findViewById<TextView>(R.id.tertiary_name)
+        val tertiaryHex = findViewById<TextView>(R.id.tertiary_hex)
 
-        val accentColor = findViewById<ImageView>(R.id.build_color_4)
+        val accentColor = findViewById<ImageView>(R.id.accent_image)
         val accentSplashLabel = findViewById<TextView>(R.id.color_label_4)
-        val accentName = findViewById<TextView>(R.id.color_name_4)
-        val accentHex = findViewById<TextView>(R.id.text_hex4)
+        val accentName = findViewById<TextView>(R.id.accent_name)
+        val accentHex = findViewById<TextView>(R.id.accent_hex)
 
         val paletteNameBox = findViewById<EditText>(R.id.editPaletteName)
         val paletteSaveButton = findViewById<Button>(R.id.paletteSaveButton)
