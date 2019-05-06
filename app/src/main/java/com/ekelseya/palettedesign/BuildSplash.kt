@@ -19,7 +19,6 @@ class BuildSplash : AppCompatActivity() {
     private var colorPosition: Int = 0
     private var colorCount: Int = 0
     private lateinit var primaryBlock:ColorBlocks
-    //TODO: Not saving blocks between activities
     private lateinit var secondaryBlock: ColorBlocks
     private lateinit var tertiaryBlock: ColorBlocks
     private lateinit var accentBlock: ColorBlocks
@@ -239,8 +238,6 @@ class BuildSplash : AppCompatActivity() {
         paletteSaveButton.setOnClickListener(){
             onSave()
         }
-
-        //TODO: or create Palette class with name and notes, save as map with date/time as key
     }
 
     private fun isColorDark(color: Int): Boolean {

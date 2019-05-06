@@ -29,15 +29,15 @@
     <string name="help">Help</string>
     <string name="build_a_new_palette">Build a New Palette</string>
     <string name="gallery">Gallery</string>
-    <string name="about_details">Palette Design copyright 2019 ekelseya designs</string>
-    <string name="help_information">To Build a new palette: tap the build icon.
-        Selecting each color block in turn will open the build page. Here you can
+    <string name="about_details">"Palette Design \n\ncopyright 2019 \n\nekelseya designs"</string>
+    <string name="help_information">"To Build a new palette: \n\nTap the build icon.
+        \n\nSelecting each color block in turn will open the build page. \n\nHere you can
         enter the Red, Green and Blue values or the Hexadecimal representation for
-        your color or you can choose to find a color in an image. Once your color
-        is perfect, name it and tap the set color button. Once you have chosen all
+        your color or you can choose to find a color in an image. \n\nOnce your color
+        is perfect, name it and tap the set color button. \n\nOnce you have chosen all
         four colors, you can name your palette and save it to the palette gallery.
-        To load the palette gallery, chose the gallery option in the menu and swipe
-        through your saved palettes.</string>
+        \n\nTo load the palette gallery, chose the gallery option in the menu and swipe
+        through your saved palettes."</string>
     <string name="hexadecimal">Hexadecimal</string>
     <string name="red">Red</string>
     <string name="green">Green</string>

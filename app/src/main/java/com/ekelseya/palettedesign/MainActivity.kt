@@ -85,12 +85,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.i("nav", "build intent sent")
                 startActivity(intent)
             }
-            R.id.nav_share -> {
+/*            R.id.nav_share -> {
                 //TODO: ??
             }
             R.id.nav_send -> {
                 //TODO: ??
-            }
+            }*/
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
