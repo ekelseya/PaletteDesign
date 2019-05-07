@@ -11,14 +11,17 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.ObjectInputStream
 
+private lateinit var paletteSavedString: MutableList<String>
+
 class GalleryActivity: AppCompatActivity() {
+    private var paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
+
     private val primaryColor: ColorBlocks = ColorBlocks("Salmon", "#D67A7A", 214, 122, 122, 1)
     private val secondaryColor: ColorBlocks = ColorBlocks("Sunset Brick", "#BF5E3B", 191, 94, 59, 2)
     private val tertiaryColor: ColorBlocks = ColorBlocks("Raisin", "#805C5E", 128, 92, 94, 3)
     private val accentColor: ColorBlocks = ColorBlocks("Mustard", "#D6BD3D", 214, 189, 61, 4)
 
     private val samplePalette = Palette(primaryColor, secondaryColor, tertiaryColor, accentColor, "Sample Palette")
-    private var paletteArray = arrayListOf<Palette>(samplePalette)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +29,7 @@ class GalleryActivity: AppCompatActivity() {
         onLoad()
 
         val gallerySpinner = findViewById<Spinner>(R.id.spinner)
-        val paletteNames = mutableListOf<String>(samplePalette.pName)
-
-        var i = 1
-        while (i < paletteArray.size) {
-            paletteNames.add(paletteArray[i].pName)
-            i += 1
-        }
+        val paletteNames = paletteMap.keys.toList()
 
         val aa = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, paletteNames)
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -45,25 +42,26 @@ class GalleryActivity: AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val tempPalette = paletteArray[position]
-                loadColor(primary_image, tempPalette.primaryBlock)
-                loadColor(secondary_image, tempPalette.secondaryBlock)
-                loadColor(tertiary_image, tempPalette.tertiaryBlock)
-                loadColor(accent_image, tempPalette.accentBlock)
-                loadNames(primary_name, tempPalette.primaryBlock)
-                loadHex(primary_hex, tempPalette.primaryBlock)
-                loadNames(secondary_name, tempPalette.secondaryBlock)
-                loadHex(secondary_hex, tempPalette.secondaryBlock)
-                loadNames(tertiary_name, tempPalette.tertiaryBlock)
-                loadHex(tertiary_hex, tempPalette.tertiaryBlock)
-                loadNames(accent_name, tempPalette.accentBlock)
-                loadHex(accent_hex, tempPalette.accentBlock)
-                textPaletteName.text = tempPalette.pName
+                val name = paletteNames[position]
+                val tempPalette = paletteMap[name]
+                loadColor(primary_image, tempPalette!![0])
+                loadColor(secondary_image, tempPalette[1])
+                loadColor(tertiary_image, tempPalette[2])
+                loadColor(accent_image, tempPalette[3])
+                loadNames(primary_name, tempPalette[0])
+                loadHex(primary_hex, tempPalette[0])
+                loadNames(secondary_name, tempPalette[1])
+                loadHex(secondary_hex, tempPalette[1])
+                loadNames(tertiary_name, tempPalette[2])
+                loadHex(tertiary_hex, tempPalette[2])
+                loadNames(accent_name, tempPalette[3])
+                loadHex(accent_hex, tempPalette[3])
+                textPaletteName.text = name
             }
         }
     }
 
-    private fun onLoad() {
+    fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
             ObjectInputStream(FileInputStream(favFile)).use { it ->
@@ -72,7 +70,7 @@ class GalleryActivity: AppCompatActivity() {
                     is ArrayList<*> -> Log.i("Load", "Deserialized")
                     else -> Log.i("Load", "Failed")
                 }
-                paletteArray = loadedPalettes as ArrayList<Palette>
+                paletteMap = loadedPalettes as MutableMap<String, Array<ColorBlocks>>
             }
         }
     }

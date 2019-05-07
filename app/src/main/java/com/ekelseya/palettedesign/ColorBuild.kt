@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import kotlinx.android.synthetic.main.color_block_build.*
 
 class ColorBuild : AppCompatActivity() {
     //TODO: Link to ColorPicker!
@@ -32,7 +33,7 @@ class ColorBuild : AppCompatActivity() {
         var hexValue = ""
         var colorName = ""
         val colorImage = findViewById<ImageView>(R.id.build_color_block)
-        val btnImage = findViewById<Button>(R.id.image_button)
+        val btnImage = findViewById<Button>(R.id.buttonImage)
         val redText = findViewById<EditText>(R.id.editRed)
         val greenText = findViewById<EditText>(R.id.editGreen)
         val blueText = findViewById<EditText>(R.id.editBlue)
@@ -174,13 +175,30 @@ class ColorBuild : AppCompatActivity() {
         val extras = data?.extras
         Log.i("RETURN", "Return OK")
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-                //val arrayColorOne = extras?.getIntArray("color")
-                val colorView = findViewById<ImageView>(R.id.build_color_block)
-                val redValue = extras!!.getInt("red")
-                val greenValue = extras.getInt("green")
-                val blueValue = extras.getInt("blue")
-                val newColor =  Color.rgb(redValue, greenValue, blueValue)
-                colorView.setColorFilter(newColor)
+            buttonImage.visibility = View.INVISIBLE
+            buildIcon.visibility = View.INVISIBLE
+            picker_button.visibility = View.INVISIBLE
+            textRed.visibility = View.VISIBLE
+            textGreen.visibility = View.VISIBLE
+            textBlue.visibility = View.VISIBLE
+            textHex.visibility = View.VISIBLE
+            editRed.visibility = View.VISIBLE
+            editGreen.visibility = View.VISIBLE
+            editBlue.visibility = View.VISIBLE
+            editHex.visibility = View.VISIBLE
+            nameText.visibility = View.VISIBLE
+            set_button.visibility = View.VISIBLE
+            val colorView = findViewById<ImageView>(R.id.build_color_block)
+            redValue = extras!!.getInt("red")
+            editRed.setText(redValue.toString())
+            greenValue = extras.getInt("green")
+            editGreen.setText(greenValue.toString())
+            blueValue = extras.getInt("blue")
+            editBlue.setText(blueValue.toString())
+            val newColor =  Color.rgb(redValue, greenValue, blueValue)
+            colorView.setBackgroundColor(newColor)
+            val hexValue = String.format("#%02X%02X%02X", redValue, greenValue, blueValue)
+            editHex.setText(hexValue)
         }
     }
     @RequiresApi(Build.VERSION_CODES.CUPCAKE)

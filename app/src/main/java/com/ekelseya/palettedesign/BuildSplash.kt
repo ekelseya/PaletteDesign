@@ -14,7 +14,7 @@ private const val PREFS_BLOCKS = "prefs_blocks"
 private const val KEY_BLOCKS_LIST = "color_list"
 
 class BuildSplash : AppCompatActivity() {
-    private var paletteArray: MutableList<Palette>? = null
+    private var paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
 
     private var colorPosition: Int = 0
     private var colorCount: Int = 0
@@ -22,6 +22,7 @@ class BuildSplash : AppCompatActivity() {
     private lateinit var secondaryBlock: ColorBlocks
     private lateinit var tertiaryBlock: ColorBlocks
     private lateinit var accentBlock: ColorBlocks
+    private var paletteName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -230,12 +231,11 @@ class BuildSplash : AppCompatActivity() {
             paletteNameBox.visibility = View.VISIBLE
         }
 
-        val paletteName = paletteNameBox.text.toString()
-        val palette = Palette(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock, paletteName)
-        onLoad()
-        paletteArray!!.add(palette)
+        paletteName = paletteNameBox.text.toString()
 
         paletteSaveButton.setOnClickListener(){
+            val savedPalette = paletteBuilder(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock, paletteName)
+            paletteMap.putAll(savedPalette)
             onSave()
         }
     }
@@ -247,6 +247,13 @@ class BuildSplash : AppCompatActivity() {
 
     private fun textBrightness(textView: TextView, color: Int){
         if (isColorDark(color)) textView.setTextColor(Color.WHITE)
+    }
+
+    private fun paletteBuilder(primaryBlock: ColorBlocks, secondaryBlock: ColorBlocks,
+                               tertiaryBlock: ColorBlocks, accentBlock: ColorBlocks, name: String): MutableMap<String, Array<ColorBlocks>> {
+        val paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
+        paletteMap[name] = arrayOf(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock)
+        return paletteMap
     }
 
     private fun preferenceStringBuilder(colorBlocks: ColorBlocks): String{
@@ -290,22 +297,23 @@ class BuildSplash : AppCompatActivity() {
         }
         getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).edit().putString(KEY_BLOCKS_LIST, savedList).apply()
     }
-    fun onSave() {
+    private fun onSave() {
         val favFile = File(filesDir, "favorites")
-        ObjectOutputStream(FileOutputStream(favFile)).use { it -> it.writeObject(paletteArray) }
+        ObjectOutputStream(FileOutputStream(favFile)).use { it -> it.writeObject(paletteMap) }
 
         Toast.makeText(this, "New Palette Saved!", Toast.LENGTH_SHORT).show()
     }
-    fun onLoad() {
+    private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
             ObjectInputStream(FileInputStream(favFile)).use { it ->
                 val loadedPalettes = it.readObject()
                 when (loadedPalettes) {
-                    is MutableList<*> -> Log.i("Load", "Deserialized")
+                    is ArrayList<*> -> Log.i("Load", "Deserialized")
                     else -> Log.i("Load", "Failed")
                 }
-                paletteArray = loadedPalettes as MutableList<Palette>
+                //TODO: Failing here.
+                paletteMap = loadedPalettes as MutableMap<String, Array<ColorBlocks>>
             }
         }
     }
