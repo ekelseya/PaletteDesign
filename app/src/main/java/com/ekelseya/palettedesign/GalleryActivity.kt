@@ -11,8 +11,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.ObjectInputStream
 
-private lateinit var paletteSavedString: MutableList<String>
-
 class GalleryActivity: AppCompatActivity() {
     private var paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
 
@@ -21,11 +19,10 @@ class GalleryActivity: AppCompatActivity() {
     private val tertiaryColor: ColorBlocks = ColorBlocks("Raisin", "#805C5E", 128, 92, 94, 3)
     private val accentColor: ColorBlocks = ColorBlocks("Mustard", "#D6BD3D", 214, 189, 61, 4)
 
-    private val samplePalette = Palette(primaryColor, secondaryColor, tertiaryColor, accentColor, "Sample Palette")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
+
         onLoad()
 
         val gallerySpinner = findViewById<Spinner>(R.id.spinner)
@@ -61,7 +58,7 @@ class GalleryActivity: AppCompatActivity() {
         }
     }
 
-    fun onLoad() {
+    private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
             ObjectInputStream(FileInputStream(favFile)).use { it ->

@@ -12,7 +12,7 @@ import java.io.*
 
 private const val PREFS_BLOCKS = "prefs_blocks"
 private const val KEY_BLOCKS_LIST = "color_list"
-
+//TODO: Load still not working and gallery spinner not populating properly
 class BuildSplash : AppCompatActivity() {
     private var paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
 
