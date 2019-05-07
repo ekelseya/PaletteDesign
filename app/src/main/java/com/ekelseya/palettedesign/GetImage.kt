@@ -17,7 +17,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.color_block_build.*
 import kotlinx.android.synthetic.main.get_image.*
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
@@ -45,7 +44,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        imageButton.setOnClickListener(this)
+        getImage2.setOnClickListener(this)
         ok_button.setOnClickListener(this)
         button_setColor.setOnClickListener(this)
 
@@ -56,7 +55,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         if (v != null) {
             when(v.id) {
-                R.id.buttonImage -> {takePhotoFromCamera() }
+                R.id.getImage2 -> {takePhotoFromCamera() }
                 R.id.ok_button -> {getColor()}
                 R.id.button_setColor -> {returnColor()}
                 else -> println("No case satisfied")
@@ -144,7 +143,7 @@ class GetImage: AppCompatActivity(), View.OnClickListener {
             setImageViewWithImage()
             Toast.makeText(this@GetImage, "Click New Color to get color from image!", Toast.LENGTH_LONG).show()
             imageCamera.visibility = View.INVISIBLE
-            buttonImage.visibility = View.INVISIBLE
+            getImage2.visibility = View.INVISIBLE
             ok_button.visibility = View.VISIBLE
             button_setColor.visibility = View.VISIBLE
         }

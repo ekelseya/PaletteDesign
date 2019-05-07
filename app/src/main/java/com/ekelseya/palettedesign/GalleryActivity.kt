@@ -23,7 +23,13 @@ class GalleryActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
-        onLoad()
+        paletteMap["Sample Palette"] = arrayOf(primaryColor, secondaryColor, tertiaryColor, accentColor)
+        paletteMap["Fun"] = arrayOf(fP, fS, fT, fA)
+        paletteMap["Vincent"] = arrayOf(aP, aS, aT, aA)
+        paletteMap["Muted"] = arrayOf(mP, mS, mT, mA)
+        paletteMap["Techno"] = arrayOf(nP, nS, nT, nA)
+
+        //TODO: uncomment this: onLoad()
 
         val gallerySpinner = findViewById<Spinner>(R.id.spinner)
         val paletteNames = paletteMap.keys.toList()
@@ -77,9 +83,20 @@ class GalleryActivity: AppCompatActivity() {
         imageView.setBackgroundColor(backgroundColor)
     }
     private fun loadNames(textView: TextView, colorBlocks: ColorBlocks){
+        val color = Color.rgb(colorBlocks.cRed, colorBlocks.cGreen, colorBlocks.cBlue)
+        textBrightness(textView, color)
         textView.text = colorBlocks.cName
     }
     private fun loadHex(textView: TextView, colorBlocks: ColorBlocks){
+        val color = Color.rgb(colorBlocks.cRed, colorBlocks.cGreen, colorBlocks.cBlue)
+        textBrightness(textView, color)
         textView.text = colorBlocks.cHexRep
+    }
+    private fun isColorDark(color: Int): Boolean {
+        val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
+        return darkness >= 0.5
+    }
+    private fun textBrightness(textView: TextView, color: Int){
+        if (isColorDark(color)) textView.setTextColor(Color.WHITE)
     }
 }

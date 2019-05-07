@@ -33,7 +33,7 @@ class ColorBuild : AppCompatActivity() {
         var hexValue = ""
         var colorName = ""
         val colorImage = findViewById<ImageView>(R.id.build_color_block)
-        val btnImage = findViewById<Button>(R.id.buttonImage)
+        val btnImage = findViewById<Button>(R.id.buttonImage1)
         val redText = findViewById<EditText>(R.id.editRed)
         val greenText = findViewById<EditText>(R.id.editGreen)
         val blueText = findViewById<EditText>(R.id.editBlue)
@@ -175,7 +175,7 @@ class ColorBuild : AppCompatActivity() {
         val extras = data?.extras
         Log.i("RETURN", "Return OK")
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            buttonImage.visibility = View.INVISIBLE
+            buttonImage1.visibility = View.INVISIBLE
             buildIcon.visibility = View.INVISIBLE
             picker_button.visibility = View.INVISIBLE
             textRed.visibility = View.VISIBLE
