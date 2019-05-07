@@ -43,4 +43,5 @@
     <string name="green">Green</string>
     <string name="blue">Blue</string>
     <string name="enter_color_values">Enter Color Values</string>
+    <string name="choose_color_with_color_picker">Choose Color with Color Picker</string>
 </resources>
