@@ -3,16 +3,19 @@ package com.ekelseya.palettedesign
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_gallery.*
 import java.io.File
-import java.io.FileInputStream
-import java.io.ObjectInputStream
 
 class GalleryActivity: AppCompatActivity() {
     private var paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
+    private lateinit var savedList: String
+    private lateinit var primaryBlock:ColorBlocks
+    private lateinit var secondaryBlock: ColorBlocks
+    private lateinit var tertiaryBlock: ColorBlocks
+    private lateinit var accentBlock: ColorBlocks
+    private lateinit var tempName: String
 
     private val primaryColor: ColorBlocks = ColorBlocks("Salmon", "#D67A7A", 214, 122, 122, 1)
     private val secondaryColor: ColorBlocks = ColorBlocks("Sunset Brick", "#BF5E3B", 191, 94, 59, 2)
@@ -29,7 +32,56 @@ class GalleryActivity: AppCompatActivity() {
         paletteMap["Muted"] = arrayOf(mP, mS, mT, mA)
         paletteMap["Techno"] = arrayOf(nP, nS, nT, nA)
 
-        //TODO: uncomment this: onLoad()
+        onLoad()
+        if(::savedList.isInitialized){
+            val info = savedList.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            var i = 0
+            while(i < info.size) {
+                primaryBlock =
+                    ColorBlocks(
+                        info[i],
+                        info[i + 1],
+                        info[i + 2].toInt(),
+                        info[i + 3].toInt(),
+                        info[i + 4].toInt(),
+                        info[i + 5].toInt()
+                    )
+                i += 6
+                secondaryBlock =
+                    ColorBlocks(
+                        info[i],
+                        info[i + 1],
+                        info[i + 2].toInt(),
+                        info[i + 3].toInt(),
+                        info[i + 4].toInt(),
+                        info[i + 5].toInt()
+                    )
+                i += 6
+                tertiaryBlock =
+                    ColorBlocks(
+                        info[i],
+                        info[i + 1],
+                        info[i + 2].toInt(),
+                        info[i + 3].toInt(),
+                        info[i + 4].toInt(),
+                        info[i + 5].toInt()
+                    )
+                i += 6
+                accentBlock =
+                    ColorBlocks(
+                        info[i],
+                        info[i + 1],
+                        info[i + 2].toInt(),
+                        info[i + 3].toInt(),
+                        info[i + 4].toInt(),
+                        info[i + 5].toInt()
+                    )
+                i += 6
+                tempName = info[i]
+                paletteMap[tempName] = arrayOf(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock)
+                i += 1
+            }
+        }
 
         val gallerySpinner = findViewById<Spinner>(R.id.spinner)
         val paletteNames = paletteMap.keys.toList()
@@ -48,17 +100,21 @@ class GalleryActivity: AppCompatActivity() {
                 val name = paletteNames[position]
                 val tempPalette = paletteMap[name]
                 loadColor(primary_image, tempPalette!![0])
-                loadColor(secondary_image, tempPalette[1])
-                loadColor(tertiary_image, tempPalette[2])
-                loadColor(accent_image, tempPalette[3])
                 loadNames(primary_name, tempPalette[0])
                 loadHex(primary_hex, tempPalette[0])
+
+                loadColor(secondary_image, tempPalette[1])
                 loadNames(secondary_name, tempPalette[1])
                 loadHex(secondary_hex, tempPalette[1])
+
+                loadColor(tertiary_image, tempPalette[2])
                 loadNames(tertiary_name, tempPalette[2])
                 loadHex(tertiary_hex, tempPalette[2])
+
+                loadColor(accent_image, tempPalette[3])
                 loadNames(accent_name, tempPalette[3])
                 loadHex(accent_hex, tempPalette[3])
+
                 textPaletteName.text = name
             }
         }
@@ -67,17 +123,9 @@ class GalleryActivity: AppCompatActivity() {
     private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
-            ObjectInputStream(FileInputStream(favFile)).use { it ->
-                val loadedPalettes = it.readObject()
-                when (loadedPalettes) {
-                    is ArrayList<*> -> Log.i("Load", "Deserialized")
-                    else -> Log.i("Load", "Failed")
-                }
-                paletteMap = loadedPalettes as MutableMap<String, Array<ColorBlocks>>
-            }
+            savedList = favFile.readText(Charsets.UTF_8)
         }
     }
-
     private fun loadColor(imageView: ImageView, colorBlocks: ColorBlocks){
         val backgroundColor = Color.rgb(colorBlocks.cRed, colorBlocks.cGreen, colorBlocks.cBlue)
         imageView.setBackgroundColor(backgroundColor)
@@ -97,6 +145,7 @@ class GalleryActivity: AppCompatActivity() {
         return darkness >= 0.5
     }
     private fun textBrightness(textView: TextView, color: Int){
+        textView.setTextColor(Color.BLACK)
         if (isColorDark(color)) textView.setTextColor(Color.WHITE)
     }
 }

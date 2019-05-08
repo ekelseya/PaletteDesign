@@ -3,12 +3,15 @@ package com.ekelseya.palettedesign
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import java.io.*
+import java.io.File
 
 private const val PREFS_BLOCKS = "prefs_blocks"
 private const val KEY_BLOCKS_LIST = "color_list"
@@ -22,7 +25,8 @@ class BuildSplash : AppCompatActivity() {
     private lateinit var secondaryBlock: ColorBlocks
     private lateinit var tertiaryBlock: ColorBlocks
     private lateinit var accentBlock: ColorBlocks
-    private var paletteName = ""
+    private lateinit var paletteName: String
+    private lateinit var savedList: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -231,10 +235,15 @@ class BuildSplash : AppCompatActivity() {
             paletteNameBox.visibility = View.VISIBLE
         }
 
-        paletteName = paletteNameBox.text.toString()
+        paletteNameBox.setOnClickListener(){
+            paletteName = paletteNameBox.text.toString()
+            paletteNameBox.hideKeyboard()
+        }
 
         paletteSaveButton.setOnClickListener(){
-            val savedPalette = paletteBuilder(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock, paletteName)
+            Log.i("Save", "On click listener")
+            val savedPalette =
+                paletteBuilder(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock, paletteName)
             paletteMap.putAll(savedPalette)
             onSave()
         }
@@ -250,7 +259,8 @@ class BuildSplash : AppCompatActivity() {
     }
 
     private fun paletteBuilder(primaryBlock: ColorBlocks, secondaryBlock: ColorBlocks,
-                               tertiaryBlock: ColorBlocks, accentBlock: ColorBlocks, name: String): MutableMap<String, Array<ColorBlocks>> {
+                               tertiaryBlock: ColorBlocks, accentBlock: ColorBlocks,
+                               name: String): MutableMap<String, Array<ColorBlocks>> {
         val paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
         paletteMap[name] = arrayOf(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock)
         return paletteMap
@@ -276,7 +286,6 @@ class BuildSplash : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        var savedList = ""
         if (::primaryBlock.isInitialized) {
             savedList = preferenceStringBuilder(primaryBlock)
         }
@@ -295,26 +304,34 @@ class BuildSplash : AppCompatActivity() {
                     preferenceStringBuilder(tertiaryBlock) +
                     preferenceStringBuilder(accentBlock)
         }
-        getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).edit().putString(KEY_BLOCKS_LIST, savedList).apply()
+        if (::savedList.isInitialized) {
+            getSharedPreferences(PREFS_BLOCKS, Context.MODE_PRIVATE).edit().putString(KEY_BLOCKS_LIST, savedList).apply()
+        }
     }
     private fun onSave() {
+        onLoad()
+
+        val newList = preferenceStringBuilder(primaryBlock) +
+                    preferenceStringBuilder(secondaryBlock) +
+                    preferenceStringBuilder(tertiaryBlock) +
+                    preferenceStringBuilder(accentBlock) +
+                    paletteName
+
+        savedList = newList
         val favFile = File(filesDir, "favorites")
-        ObjectOutputStream(FileOutputStream(favFile)).use { it -> it.writeObject(paletteMap) }
+        favFile.writeText(savedList)
 
         Toast.makeText(this, "New Palette Saved!", Toast.LENGTH_SHORT).show()
     }
     private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
-            ObjectInputStream(FileInputStream(favFile)).use { it ->
-                val loadedPalettes = it.readObject()
-                when (loadedPalettes) {
-                    is ArrayList<*> -> Log.i("Load", "Deserialized")
-                    else -> Log.i("Load", "Failed")
-                }
-                //TODO: Failing here.
-                paletteMap = loadedPalettes as MutableMap<String, Array<ColorBlocks>>
+            savedList = favFile.readText(Charsets.UTF_8)
             }
-        }
+    }
+    @RequiresApi(Build.VERSION_CODES.CUPCAKE)
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }
