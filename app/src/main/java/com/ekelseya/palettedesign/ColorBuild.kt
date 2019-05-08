@@ -19,19 +19,18 @@ class ColorBuild : AppCompatActivity() {
 
     //TODO: Check for null values rgb
     //TODO: Check for out of bounds values for rgb
-    //TODO: Fix focus on red values
     //TODO: Fix focus on return from image: Focus should go to Color Name (not red value)
 
     private var colorPosition = 0
     private var redValue = 255
     private var greenValue = 255
     private var blueValue = 255
+    private var colorName = ""
+    private var hexValue = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.color_block_build)
-        var hexValue = ""
-        var colorName = ""
         val colorImage = findViewById<ImageView>(R.id.build_color_block)
         val btnImage = findViewById<Button>(R.id.buttonImage1)
         val redText = findViewById<EditText>(R.id.editRed)
@@ -56,6 +55,8 @@ class ColorBuild : AppCompatActivity() {
                 redValue = info.getInt("red")
                 greenValue = info.getInt("green")
                 blueValue = info.getInt("blue")
+                val name = info.getString("name")
+                if (name != null) colorName = name
                 btnPicker.visibility = View.INVISIBLE
                 btnImage.visibility = View.INVISIBLE
                 iconImage.visibility = View.INVISIBLE
@@ -70,6 +71,7 @@ class ColorBuild : AppCompatActivity() {
                 nameText.visibility = View.VISIBLE
                 btnSetColor.visibility = View.VISIBLE
                 colorImage.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue))
+                nameText.setText(colorName)
                 redText.setText(redValue.toString())
                 greenText.setText(greenValue.toString())
                 blueText.setText(blueValue.toString())

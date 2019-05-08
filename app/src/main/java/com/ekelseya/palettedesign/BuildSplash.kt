@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import java.io.File
+import java.io.*
 
 private const val PREFS_BLOCKS = "prefs_blocks"
 private const val KEY_BLOCKS_LIST = "color_list"
@@ -310,24 +310,24 @@ class BuildSplash : AppCompatActivity() {
     }
     private fun onSave() {
         onLoad()
+        paletteMap[paletteName] = arrayOf(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock)
 
-        val newList = preferenceStringBuilder(primaryBlock) +
-                    preferenceStringBuilder(secondaryBlock) +
-                    preferenceStringBuilder(tertiaryBlock) +
-                    preferenceStringBuilder(accentBlock) +
-                    paletteName
-
-        savedList = newList
         val favFile = File(filesDir, "favorites")
-        favFile.writeText(savedList)
-
+        ObjectOutputStream(FileOutputStream(favFile)).use { it -> it.writeObject(paletteMap)}
         Toast.makeText(this, "New Palette Saved!", Toast.LENGTH_SHORT).show()
     }
     private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
-            savedList = favFile.readText(Charsets.UTF_8)
+            ObjectInputStream(FileInputStream(favFile)).use { it ->
+                val loadMap = it.readObject()
+                when (loadMap){
+                    is Map<*, *> -> Log.i("Load", "success")
+                    else -> Log.i("Load", "failed")
+                }
+                paletteMap = loadMap as MutableMap<String, Array<ColorBlocks>>
             }
+        }
     }
     @RequiresApi(Build.VERSION_CODES.CUPCAKE)
     private fun View.hideKeyboard() {

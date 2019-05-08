@@ -3,19 +3,16 @@ package com.ekelseya.palettedesign
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_gallery.*
 import java.io.File
+import java.io.FileInputStream
+import java.io.ObjectInputStream
 
 class GalleryActivity: AppCompatActivity() {
     private var paletteMap = mutableMapOf<String, Array<ColorBlocks>>()
-    private lateinit var savedList: String
-    private lateinit var primaryBlock:ColorBlocks
-    private lateinit var secondaryBlock: ColorBlocks
-    private lateinit var tertiaryBlock: ColorBlocks
-    private lateinit var accentBlock: ColorBlocks
-    private lateinit var tempName: String
 
     private val primaryColor: ColorBlocks = ColorBlocks("Salmon", "#D67A7A", 214, 122, 122, 1)
     private val secondaryColor: ColorBlocks = ColorBlocks("Sunset Brick", "#BF5E3B", 191, 94, 59, 2)
@@ -33,55 +30,6 @@ class GalleryActivity: AppCompatActivity() {
         paletteMap["Techno"] = arrayOf(nP, nS, nT, nA)
 
         onLoad()
-        if(::savedList.isInitialized){
-            val info = savedList.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            var i = 0
-            while(i < info.size) {
-                primaryBlock =
-                    ColorBlocks(
-                        info[i],
-                        info[i + 1],
-                        info[i + 2].toInt(),
-                        info[i + 3].toInt(),
-                        info[i + 4].toInt(),
-                        info[i + 5].toInt()
-                    )
-                i += 6
-                secondaryBlock =
-                    ColorBlocks(
-                        info[i],
-                        info[i + 1],
-                        info[i + 2].toInt(),
-                        info[i + 3].toInt(),
-                        info[i + 4].toInt(),
-                        info[i + 5].toInt()
-                    )
-                i += 6
-                tertiaryBlock =
-                    ColorBlocks(
-                        info[i],
-                        info[i + 1],
-                        info[i + 2].toInt(),
-                        info[i + 3].toInt(),
-                        info[i + 4].toInt(),
-                        info[i + 5].toInt()
-                    )
-                i += 6
-                accentBlock =
-                    ColorBlocks(
-                        info[i],
-                        info[i + 1],
-                        info[i + 2].toInt(),
-                        info[i + 3].toInt(),
-                        info[i + 4].toInt(),
-                        info[i + 5].toInt()
-                    )
-                i += 6
-                tempName = info[i]
-                paletteMap[tempName] = arrayOf(primaryBlock, secondaryBlock, tertiaryBlock, accentBlock)
-                i += 1
-            }
-        }
 
         val gallerySpinner = findViewById<Spinner>(R.id.spinner)
         val paletteNames = paletteMap.keys.toList()
@@ -119,11 +67,17 @@ class GalleryActivity: AppCompatActivity() {
             }
         }
     }
-
     private fun onLoad() {
         val favFile = File(filesDir, "favorites")
         if (favFile.exists()) {
-            savedList = favFile.readText(Charsets.UTF_8)
+            ObjectInputStream(FileInputStream(favFile)).use { it ->
+                val loadMap = it.readObject()
+                when (loadMap){
+                    is Map<*, *> -> Log.i("Load", "success")
+                    else -> Log.i("Load", "failed")
+                }
+                paletteMap = loadMap as MutableMap<String, Array<ColorBlocks>>
+            }
         }
     }
     private fun loadColor(imageView: ImageView, colorBlocks: ColorBlocks){
